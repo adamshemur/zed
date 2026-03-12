@@ -1,5 +1,7 @@
 # pdf_viewer crate
 
+**Fork of [Slipstream-Max/zed](https://github.com/Slipstream-Max/zed/tree/feature/pdf-viewer)** — simplified and rebased onto latest upstream main, with formatting-only changes removed.
+
 Native PDF rendering for Zed using [hayro](https://crates.io/crates/hayro) (pure Rust, no C dependencies).
 
 ## Architecture
