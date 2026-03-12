@@ -13,7 +13,6 @@ use image::Frame;
 use project::{Project, ProjectEntryId, ProjectItem as ProjectItemModel, ProjectPath};
 use settings::Settings;
 use smallvec::SmallVec;
-use theme::Theme;
 use ui::{WithScrollbar, prelude::*};
 use workspace::{
     ItemSettings, Pane, ToolbarItemLocation, WorkspaceId,
@@ -56,7 +55,7 @@ impl ProjectItemModel for PdfItem {
     where
         Self: Sized,
     {
-        let ext = path.path.extension()?.to_str()?.to_lowercase();
+        let ext = path.path.extension()?.to_lowercase();
         if ext != "pdf" {
             return None;
         }
@@ -67,7 +66,7 @@ impl ProjectItemModel for PdfItem {
         Some(cx.spawn(async move |cx| {
             let abs_path = project
                 .read_with(cx, |project, cx| project.absolute_path(&path, cx))
-                .context("failed to read project")?;
+                .context("failed to resolve absolute path")?;
 
             let entry_id = project.read_with(cx, |project, cx| {
                 project.entry_for_path(&path, cx).map(|entry| entry.id)
@@ -87,7 +86,7 @@ impl ProjectItemModel for PdfItem {
 
             Ok(cx.new(|_| PdfItem {
                 pdf_data: Arc::new(pdf),
-                file_path: abs_path.unwrap().into(),
+                file_path: abs_path.into(),
                 entry_id,
                 project_path: path,
             }))
@@ -296,7 +295,7 @@ fn render_pdf_page(
 impl Item for PdfView {
     type Event = PdfViewEvent;
 
-    fn to_item_events(event: &Self::Event, mut f: impl FnMut(workspace::item::ItemEvent)) {
+    fn to_item_events(event: &Self::Event, f: &mut dyn FnMut(workspace::item::ItemEvent)) {
         match event {
             PdfViewEvent::TitleChanged => {
                 f(workspace::item::ItemEvent::UpdateTab);
@@ -372,7 +371,7 @@ impl Item for PdfView {
         }
     }
 
-    fn breadcrumbs(&self, _theme: &Theme, cx: &App) -> Option<Vec<BreadcrumbText>> {
+    fn breadcrumbs(&self, cx: &App) -> Option<Vec<BreadcrumbText>> {
         let project = self.project.read(cx);
         let pdf_item = self.pdf_item.read(cx);
         let mut path = pdf_item.project_path.path.clone();
