@@ -1,3 +1,35 @@
+# adamshemur/zed — PDF Viewer Fork
+
+This is a minimal fork of [zed-industries/zed](https://github.com/zed-industries/zed) that adds native PDF viewing via [hayro](https://crates.io/crates/hayro) (pure Rust). Based on [Slipstream-Max's prototype](https://github.com/Slipstream-Max/zed/tree/feature/pdf-viewer), simplified and rebased on latest main.
+
+## Build
+
+```sh
+# Prerequisites (macOS)
+brew install cmake
+
+# Build (debug)
+cargo run
+
+# Build (release — much faster at runtime)
+cargo build --release
+# Binary at: target/release/Zed
+```
+
+## Update from upstream
+
+```sh
+git fetch upstream
+git rebase upstream/main
+cargo build --release
+```
+
+## Use
+
+Open any `.pdf` file in Zed — it renders natively in a tab with page navigation and zoom controls.
+
+---
+
 # Rust coding guidelines
 
 * Prioritize code correctness and clarity. Speed and efficiency are secondary priorities unless otherwise specified.
