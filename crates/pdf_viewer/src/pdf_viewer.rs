@@ -4,20 +4,22 @@ use std::sync::Arc;
 use anyhow::{Context as _, Result, anyhow};
 use editor::EditorSettings;
 use gpui::{
-    AnyElement, App, Context, Entity, EventEmitter, FocusHandle, Focusable, InteractiveElement,
-    IntoElement, IsZero, ObjectFit, ParentElement, Point, Render, RenderImage, ScrollHandle,
-    Styled, Task, Window, actions, div, img, px,
+    AnyElement, App, Context, Entity, EventEmitter, FocusHandle, Focusable, Font,
+    InteractiveElement, IntoElement, IsZero, ObjectFit, ParentElement, Point, Render, RenderImage,
+    ScrollHandle, Styled, Task, Window, actions, div, img, px,
 };
 use hayro::{RenderSettings, hayro_interpret::InterpreterSettings, hayro_syntax::Pdf};
 use image::Frame;
 use project::{Project, ProjectEntryId, ProjectItem as ProjectItemModel, ProjectPath};
 use settings::Settings;
+use language::HighlightedText;
 use smallvec::SmallVec;
+use theme::ThemeSettings;
 use ui::{WithScrollbar, prelude::*};
 use workspace::{
     ItemSettings, Pane, ToolbarItemLocation, WorkspaceId,
     invalid_item_view::InvalidItemView,
-    item::{BreadcrumbText, Item, ProjectItem, TabContentParams},
+    item::{Item, ProjectItem, TabContentParams},
 };
 
 actions!(
@@ -371,7 +373,7 @@ impl Item for PdfView {
         }
     }
 
-    fn breadcrumbs(&self, cx: &App) -> Option<Vec<BreadcrumbText>> {
+    fn breadcrumbs(&self, cx: &App) -> Option<(Vec<HighlightedText>, Option<Font>)> {
         let project = self.project.read(cx);
         let pdf_item = self.pdf_item.read(cx);
         let mut path = pdf_item.project_path.path.clone();
@@ -382,12 +384,14 @@ impl Item for PdfView {
             }
         }
 
-        let settings = theme::ThemeSettings::get_global(cx);
-        Some(vec![BreadcrumbText {
-            text: path.display(project.path_style(cx)).to_string(),
-            highlights: None,
-            font: Some(settings.buffer_font.clone()),
-        }])
+        let font = ThemeSettings::get_global(cx).buffer_font.clone();
+        Some((
+            vec![HighlightedText {
+                text: path.display(project.path_style(cx)).to_string().into(),
+                highlights: vec![],
+            }],
+            Some(font),
+        ))
     }
 
     fn can_split(&self) -> bool {

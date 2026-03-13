@@ -20,6 +20,7 @@ file_icons.workspace = true
 gpui.workspace = true
 hayro.workspace = true
 image.workspace = true
+language.workspace = true
 project.workspace = true
 settings.workspace = true
 smallvec.workspace = true
