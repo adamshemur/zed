@@ -1,4 +1,37 @@
-# Zed
+# Zed (PDF Viewer Fork)
+
+> **This is a fork of [zed-industries/zed](https://github.com/zed-industries/zed)** that adds native PDF viewing using [hayro](https://crates.io/crates/hayro) (pure Rust). Based on [Slipstream-Max's prototype](https://github.com/Slipstream-Max/zed/tree/feature/pdf-viewer), simplified and rebased on latest main.
+
+### What's in this fork
+
+- **Native PDF rendering** — open any `.pdf` file directly in a Zed tab
+- Page navigation (prev/next) and zoom controls (25%–400%)
+- Continuous scrolling with automatic page tracking
+- Breadcrumbs, tab icons, and split view support
+- No C dependencies — uses hayro, a pure Rust PDF engine
+
+### Build
+
+```sh
+# Prerequisites (macOS): Xcode with Metal Toolchain + cmake
+brew install cmake
+
+# Build
+cargo build --release
+
+# Run
+open target/release/Zed
+```
+
+### Keep updated
+
+```sh
+git fetch upstream
+git rebase upstream/main
+cargo build --release
+```
+
+---
 
 [![Zed](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/zed-industries/zed/main/assets/badge/v0.json)](https://zed.dev)
 [![CI](https://github.com/zed-industries/zed/actions/workflows/run_tests.yml/badge.svg)](https://github.com/zed-industries/zed/actions/workflows/run_tests.yml)
